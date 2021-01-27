@@ -3,6 +3,7 @@ package algorithm.design.course;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -61,46 +62,64 @@ public class P1 {
 
     private static Index lastFired(FireMap map, int k) {
 
+        List<Index> burnedIndices = new LinkedList<>();
         //---
         //-f-
         //---
         while (!map.toFireIndices.isEmpty()) {
 
-            Index toFireIndex = map.toFireIndices.poll();
-
-            fire(map, toFireIndex.i + 1, toFireIndex.j + 1);
-
-            fire(map, toFireIndex.i + 1, toFireIndex.j);
-            fire(map, toFireIndex.i, toFireIndex.j + 1);
-
-            fire(map, toFireIndex.i + 1, toFireIndex.j - 1);
-            fire(map, toFireIndex.i - 1, toFireIndex.j + 1);
-
-            fire(map, toFireIndex.i, toFireIndex.j - 1);
-            fire(map, toFireIndex.i - 1, toFireIndex.j);
-
-            fire(map, toFireIndex.i - 1, toFireIndex.j - 1);
-
-
             if (map.unfiredIndices.size() == 1) {
                 return map.unfiredIndices.poll();
-            } else {
-                map.unfiredIndices = map.unfiredIndices.stream()
-                        .filter(index -> !index.equals(toFireIndex))
-                        .collect(Collectors.toCollection(LinkedList::new));
-                if (map.unfiredIndices.size() == 1)
-                    return map.unfiredIndices.poll();
             }
+
+            Index toFireIndex = map.toFireIndices.poll();
+            burnedIndices.add(toFireIndex);
+
+//            fire(map, toFireIndex.i + 1, toFireIndex.j + 1);
+//
+//            fire(map, toFireIndex.i + 1, toFireIndex.j);
+//            fire(map, toFireIndex.i, toFireIndex.j + 1);
+//
+//            fire(map, toFireIndex.i + 1, toFireIndex.j - 1);
+//            fire(map, toFireIndex.i - 1, toFireIndex.j + 1);
+//
+//            fire(map, toFireIndex.i, toFireIndex.j - 1);
+//            fire(map, toFireIndex.i - 1, toFireIndex.j);
+//
+//            fire(map, toFireIndex.i - 1, toFireIndex.j - 1);
+
+
+            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j + 1);
+            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j);
+            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j - 1);
+
+
+            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j + 1);
+            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j - 1);
+
+
+            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j + 1);
+            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j);
+            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j - 1);
+
+
+            map.unfiredIndices = map.unfiredIndices.stream()
+                    .filter(index -> !index.equals(toFireIndex))
+                    .collect(Collectors.toCollection(LinkedList::new));
         }
         return map.unfiredIndices.peek();
     }
 
-    private static void fire(FireMap map, int toFireRow, int toFireColumn) {
+    private static void fire(FireMap map, List<Index> burnedIndices, int toFireRow, int toFireColumn) {
         if (toFireRow >= 0 &&
                 toFireColumn >= 0 &&
                 map.rowLength > toFireRow &&
-                map.columnLength > toFireColumn)
-            map.toFireIndices.add(new Index(toFireRow, toFireColumn));
+                map.columnLength > toFireColumn) {
+            Index toAdd = new Index(toFireRow, toFireColumn);
+            if (map.toFireIndices.stream().noneMatch(index -> index.equals(toAdd)) &&
+            burnedIndices.stream().noneMatch(index -> index.equals(toAdd)))
+                map.toFireIndices.add(toAdd);
+        }
     }
 }
 
