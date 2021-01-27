@@ -11,7 +11,10 @@ public class P1 {
 
     public static void main(String[] args) {
 
-        File inputFile = new File("TestCases/A/sample.in");
+        long startTime = System.currentTimeMillis();
+
+
+        File inputFile = new File("TestCases/A/a.in");
         try {
             scanner = new Scanner(inputFile);
         } catch (FileNotFoundException e) {
@@ -32,6 +35,9 @@ public class P1 {
 
             System.out.printf("%d %d\n", lastFired.i, lastFired.j);
         }
+
+        long stopTime = System.currentTimeMillis();
+        System.out.println("Total time:" + (stopTime - startTime));
     }
 
     private static FireMap readInput(int m, int n) {
@@ -60,7 +66,6 @@ public class P1 {
 
     private static Index lastFired(FireMap map, int k) {
 
-        List<Index> burnedIndices = new LinkedList<>();
         //---
         //-f-
         //---
@@ -71,34 +76,19 @@ public class P1 {
             }
 
             Index toFireIndex = map.toFireIndices.poll();
-            burnedIndices.add(toFireIndex);
 
-//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j + 1);
-//
-//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j);
-//            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j + 1);
-//
-//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j - 1);
-//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j + 1);
-//
-//            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j - 1);
-//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j);
-//
-//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j - 1);
+            fire(map, toFireIndex.i + 1, toFireIndex.j + 1);
+            fire(map, toFireIndex.i + 1, toFireIndex.j);
+            fire(map, toFireIndex.i + 1, toFireIndex.j - 1);
 
 
-            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j + 1);
-            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j);
-            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j - 1);
+            fire(map, toFireIndex.i, toFireIndex.j + 1);
+            fire(map, toFireIndex.i, toFireIndex.j - 1);
 
 
-            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j + 1);
-            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j - 1);
-
-
-            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j + 1);
-            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j);
-            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j - 1);
+            fire(map, toFireIndex.i - 1, toFireIndex.j + 1);
+            fire(map, toFireIndex.i - 1, toFireIndex.j);
+            fire(map, toFireIndex.i - 1, toFireIndex.j - 1);
 
 
             map.unfiredIndices = map.unfiredIndices.stream()
@@ -108,14 +98,14 @@ public class P1 {
         return map.unfiredIndices.peek();
     }
 
-    private static void fire(FireMap map, List<Index> burnedIndices, int toFireRow, int toFireColumn) {
+    private static void fire(FireMap map, int toFireRow, int toFireColumn) {
         if (toFireRow >= 0 &&
                 toFireColumn >= 0 &&
                 map.rowLength > toFireRow &&
                 map.columnLength > toFireColumn) {
             Index toAdd = new Index(toFireRow, toFireColumn);
-            if (map.toFireIndices.stream().noneMatch(index -> index.equals(toAdd)) &&
-            burnedIndices.stream().noneMatch(index -> index.equals(toAdd)))
+            if (map.unfiredIndices.stream().anyMatch(index -> index.equals(toAdd)) &&
+                    map.toFireIndices.stream().noneMatch(index -> index.equals(toAdd)))
                 map.toFireIndices.add(toAdd);
         }
     }
