@@ -2,10 +2,7 @@ package algorithm.design.course;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class P1 {
@@ -57,6 +54,7 @@ public class P1 {
                 }
             }
         }
+        Collections.reverse((List<?>) map.toFireIndices);
         return map;
     }
 
@@ -69,24 +67,24 @@ public class P1 {
         while (!map.toFireIndices.isEmpty()) {
 
             if (map.unfiredIndices.size() == 1) {
-                return map.unfiredIndices.poll();
+                return map.unfiredIndices.peek();
             }
 
             Index toFireIndex = map.toFireIndices.poll();
             burnedIndices.add(toFireIndex);
 
-//            fire(map, toFireIndex.i + 1, toFireIndex.j + 1);
+//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j + 1);
 //
-//            fire(map, toFireIndex.i + 1, toFireIndex.j);
-//            fire(map, toFireIndex.i, toFireIndex.j + 1);
+//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j);
+//            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j + 1);
 //
-//            fire(map, toFireIndex.i + 1, toFireIndex.j - 1);
-//            fire(map, toFireIndex.i - 1, toFireIndex.j + 1);
+//            fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j - 1);
+//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j + 1);
 //
-//            fire(map, toFireIndex.i, toFireIndex.j - 1);
-//            fire(map, toFireIndex.i - 1, toFireIndex.j);
+//            fire(map, burnedIndices, toFireIndex.i, toFireIndex.j - 1);
+//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j);
 //
-//            fire(map, toFireIndex.i - 1, toFireIndex.j - 1);
+//            fire(map, burnedIndices, toFireIndex.i - 1, toFireIndex.j - 1);
 
 
             fire(map, burnedIndices, toFireIndex.i + 1, toFireIndex.j + 1);
