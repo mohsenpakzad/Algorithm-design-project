@@ -82,18 +82,17 @@ public class P1 {
             fire(map, toFireIndex.i - 1, toFireIndex.j - 1);
 
 
-            if (map.unfiredIndices.size() == 1 &&
-                    map.unfiredIndices.stream()
-                            .anyMatch(index -> index.equals(toFireIndex))
-            ) {
-                return toFireIndex;
+            if (map.unfiredIndices.size() == 1) {
+                return map.unfiredIndices.poll();
             } else {
                 map.unfiredIndices = map.unfiredIndices.stream()
                         .filter(index -> !index.equals(toFireIndex))
                         .collect(Collectors.toCollection(LinkedList::new));
+                if (map.unfiredIndices.size() == 1)
+                    return map.unfiredIndices.poll();
             }
         }
-        throw new RuntimeException("Solution not found");
+        return map.unfiredIndices.peek();
     }
 
     private static void fire(FireMap map, int toFireRow, int toFireColumn) {
