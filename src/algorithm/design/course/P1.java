@@ -11,7 +11,7 @@ public class P1 {
 
     public static void main(String[] args) {
 
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
 
 
         File inputFile = new File("TestCases/A/a.in");
@@ -36,8 +36,8 @@ public class P1 {
             System.out.printf("%d %d\n", lastFired.i, lastFired.j);
         }
 
-        long stopTime = System.currentTimeMillis();
-        System.out.println("Total time:" + (stopTime - startTime));
+//        long stopTime = System.currentTimeMillis();
+//        System.out.println("Total time:" + (stopTime - startTime));
     }
 
     private static FireMap readInput(int m, int n) {
@@ -66,9 +66,7 @@ public class P1 {
 
     private static Index lastFired(FireMap map, int k) {
 
-        //---
-        //-f-
-        //---
+
         while (!map.toFireIndices.isEmpty()) {
 
             if (map.unfiredIndices.size() == 1) {
@@ -77,6 +75,9 @@ public class P1 {
 
             Index toFireIndex = map.toFireIndices.poll();
 
+            //---
+            //-f-
+            //---
             fire(map, toFireIndex.i + 1, toFireIndex.j + 1);
             fire(map, toFireIndex.i + 1, toFireIndex.j);
             fire(map, toFireIndex.i + 1, toFireIndex.j - 1);
