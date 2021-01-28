@@ -1,7 +1,8 @@
-package algorithm.design.course;
+package algorithm.design.course.phase1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import algorithm.design.course.helper.Index;
+import algorithm.design.course.helper.Utils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,12 +15,8 @@ public class P1 {
 //        long startTime = System.currentTimeMillis();
 
 
-        File inputFile = new File("TestCases/A/a.in");
-        try {
-            scanner = new Scanner(inputFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        scanner = Utils.getFileScanner("TestCases/A/a.in");
+//        scanner = new Scanner(System.in);
 
         int m, n, k;
 
@@ -112,8 +109,3 @@ public class P1 {
     }
 }
 
-class FireMap {
-    public Queue<Index> toFireIndices = new LinkedList<>();
-    public Queue<Index> unfiredIndices = new LinkedList<>();
-    public int rowLength, columnLength;
-}

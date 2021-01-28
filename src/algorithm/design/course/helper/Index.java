@@ -1,4 +1,4 @@
-package algorithm.design.course;
+package algorithm.design.course.helper;
 
 public class Index {
 
