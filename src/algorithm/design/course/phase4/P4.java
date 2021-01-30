@@ -11,7 +11,7 @@ public class P4 {
     public static void main(String[] args) {
 
 
-        scanner = Utils.getFileScanner("TestCases/C/sample.in");
+        scanner = Utils.getFileScanner("TestCases/D/sample.in");
         //        scanner = new Scanner(System.in);
     }
 }
