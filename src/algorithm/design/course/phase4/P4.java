@@ -11,10 +11,10 @@ public class P4 {
 
     public static void main(String[] args) {
 
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
 
 
-        scanner = Utils.getFileScanner("TestCases/D/treasure-in-first-cave.in");
+        scanner = Utils.getFileScanner("TestCases/D/kill-greedy.in");
         //        scanner = new Scanner(System.in);
 
         int testsNumber = scanner.nextInt();
@@ -27,8 +27,8 @@ public class P4 {
         }
 
 
-        long stopTime = System.currentTimeMillis();
-        System.out.println("Total time:" + (stopTime - startTime));
+//        long stopTime = System.currentTimeMillis();
+//        System.out.println("Total time:" + (stopTime - startTime));
     }
 
     private static int findMaxTreasureWithPossibleDistance(Data data, int maxPossibleDistance) {
@@ -109,7 +109,7 @@ public class P4 {
         Cave startCave = null;
 
         for (int i = 0; i < caveNumber; i++) {
-            Cave cave = new Cave(i);
+            Cave cave = new Cave();
             caves.add(cave);
             if (i == 0) startCave = cave;
         }
@@ -135,8 +135,6 @@ public class P4 {
             if (treasureCave.tunnels.size() > 0) treasureCaves.add(treasureCave);
         }
 
-        caves = caves.stream().filter(cave -> cave.tunnels.size() != 0).collect(Collectors.toList());
-
-        return new Data(caves, startCave, treasureCaves);
+        return new Data(startCave, treasureCaves);
     }
 }

@@ -5,11 +5,6 @@ import java.util.List;
 
 class Cave {
 
-    public int id;
     public List<Tunnel> tunnels = new ArrayList<>();
     public int treasureNum = 0;
-
-    public Cave(int id) {
-        this.id = id;
-    }
 }

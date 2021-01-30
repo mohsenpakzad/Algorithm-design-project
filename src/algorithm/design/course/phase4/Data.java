@@ -5,13 +5,11 @@ import java.util.Set;
 
 class Data {
 
-    public Data(List<Cave> caves, Cave startCave, Set<Cave> treasureCaves) {
-        this.caves = caves;
+    public Data(Cave startCave, Set<Cave> treasureCaves) {
         this.startCave = startCave;
         this.treasureCaves = treasureCaves;
     }
 
-    public List<Cave> caves;
     public Cave startCave;
     public Set<Cave> treasureCaves;
 }

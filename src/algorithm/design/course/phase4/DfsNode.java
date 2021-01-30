@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DfsNode {
+class DfsNode {
 
     public DfsNode(DfsNode parent, Cave startCave, Cave desCave, int passedLength) {
 
