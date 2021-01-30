@@ -14,13 +14,15 @@ public class P4 {
 //        long startTime = System.currentTimeMillis();
 
 
-        scanner = Utils.getFileScanner("TestCases/D/kill-greedy.in");
+        scanner = Utils.getFileScanner("TestCases/D/random.10000.in");
         //        scanner = new Scanner(System.in);
 
         int testsNumber = scanner.nextInt();
         for (int i = 0; i < testsNumber; i++) {
 
             Data data = readCavesAndTunnels();
+            findMinDistance(data);
+
             int maxPossibleDistance = scanner.nextInt();
 
             System.out.println(findMaxTreasureWithPossibleDistance(data, maxPossibleDistance));
@@ -37,7 +39,7 @@ public class P4 {
         Stack<DfsNode> stack = new Stack<>();
 
         for (Cave treasureCave : data.treasureCaves) {
-            int shortestPathToTreasure = findShortestPathFromSourceToDest(data.startCave, treasureCave);
+            int shortestPathToTreasure = findDistance(data.minDistances, data.startCave, treasureCave);
             if (shortestPathToTreasure <= maxPossibleDistance) {
                 stack.push(new DfsNode(null, data.startCave, treasureCave, shortestPathToTreasure));
             }
@@ -48,7 +50,7 @@ public class P4 {
             DfsNode popNode = stack.pop();
 
             int shortestPathFromStartAndBack = popNode.passedLength +
-                    findShortestPathFromSourceToDest(popNode.desCave, data.startCave);
+                    findDistance(data.minDistances, popNode.desCave, data.startCave);
 
             if (shortestPathFromStartAndBack <= maxPossibleDistance) {
 
@@ -61,8 +63,8 @@ public class P4 {
                         .filter(cave -> !popNode.coveredCaves.contains(cave))
                         .collect(Collectors.toList());
 
-                for (Cave nextTreasureCave : filteredNextTreasures){
-                    int shortestPathToNextTreasure = findShortestPathFromSourceToDest(popNode.desCave, nextTreasureCave);
+                for (Cave nextTreasureCave : filteredNextTreasures) {
+                    int shortestPathToNextTreasure = findDistance(data.minDistances, popNode.desCave, nextTreasureCave);
                     if (shortestPathToNextTreasure <= maxPossibleDistance) {
                         stack.push(new DfsNode(popNode, popNode.desCave, nextTreasureCave,
                                 popNode.passedLength + shortestPathToNextTreasure));
@@ -77,7 +79,16 @@ public class P4 {
                 .orElse(0);
     }
 
-    private static int findShortestPathFromSourceToDest(Cave source, Cave dest) {
+    private static int findDistance(List<Distance> distances, Cave first, Cave second) {
+        return distances.stream()
+                .filter(distance -> (distance.src == first && distance.dest == second) ||
+                        (distance.src == second && distance.dest == first)
+                ).findAny()
+                .orElseThrow(() -> new RuntimeException("Path not calculated!"))
+                .value;
+    }
+
+    private static int calculateShortestPathFromSourceToDest(Cave source, Cave dest) {
 
         PriorityQueue<UniformSearchNode> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.coveredDistance));
         priorityQueue.add(new UniformSearchNode(source, 0));
@@ -98,6 +109,29 @@ public class P4 {
 
         }
         return -1;
+    }
+
+    private static void findMinDistance(Data data) {
+
+        Set<Cave> noWayFromSourceCaves = new LinkedHashSet<>();
+        for (Cave treasureCave : data.treasureCaves) {
+            int shortestPathToTreasure = calculateShortestPathFromSourceToDest(data.startCave, treasureCave);
+            if (shortestPathToTreasure == -1) {
+                noWayFromSourceCaves.add(treasureCave);
+            } else {
+                data.minDistances.add(new Distance(data.startCave, treasureCave, shortestPathToTreasure));
+            }
+        }
+        data.treasureCaves.removeAll(noWayFromSourceCaves);
+
+        for (int i = 0; i < data.treasureCaves.size(); i++) {
+            for (int j = i; j < data.treasureCaves.size(); j++) {
+                int shortestPathToTreasure = calculateShortestPathFromSourceToDest(data.treasureCaves.get(i),
+                        data.treasureCaves.get(j));
+                data.minDistances.add(new Distance(data.treasureCaves.get(i), data.treasureCaves.get(j),
+                        shortestPathToTreasure));
+            }
+        }
     }
 
     private static Data readCavesAndTunnels() {
@@ -123,7 +157,7 @@ public class P4 {
             caves.get(destCave).tunnels.add(new Tunnel(caves.get(sourceCave), length));
         }
 
-        Set<Cave> treasureCaves = new LinkedHashSet<>();
+        List<Cave> treasureCaves = new ArrayList<>();
         int numberOfTreasures = scanner.nextInt();
 
         for (int i = 0; i < numberOfTreasures; i++) {
@@ -132,7 +166,8 @@ public class P4 {
             Cave treasureCave = caves.get(caveWithTreasure);
             treasureCave.treasureNum += 1;
 
-            if (treasureCave.tunnels.size() > 0) treasureCaves.add(treasureCave);
+            if (treasureCave.tunnels.size() > 0 &&
+                    !treasureCaves.contains(treasureCave)) treasureCaves.add(treasureCave);
         }
 
         return new Data(startCave, treasureCaves);
