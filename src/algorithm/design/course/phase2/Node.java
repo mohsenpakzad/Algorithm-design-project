@@ -2,7 +2,7 @@ package algorithm.design.course.phase2;
 
 import algorithm.design.course.helper.Index;
 
-public class Node {
+class Node {
 
     public int currentTime;
     public Index index;

@@ -7,12 +7,11 @@ import java.util.*;
 
 public class P2 {
 
-    static long startTime;
     private static Scanner scanner;
 
     public static void main(String[] args) {
 
-//        startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
 
 
         scanner = Utils.getFileScanner("TestCases/B/b.in");
