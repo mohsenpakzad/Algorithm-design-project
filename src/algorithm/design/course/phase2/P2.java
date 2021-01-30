@@ -4,16 +4,16 @@ import algorithm.design.course.helper.Index;
 import algorithm.design.course.helper.Utils;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class P2 {
 
-    private static Scanner scanner;
     static long startTime;
+    private static Scanner scanner;
+
     public static void main(String[] args) {
 
-        startTime = System.currentTimeMillis();
+//        startTime = System.currentTimeMillis();
+
 
         scanner = Utils.getFileScanner("TestCases/B/b.in");
         //        scanner = new Scanner(System.in);
@@ -30,16 +30,13 @@ public class P2 {
             FireMap map = readInput(m, n);
             int leastTime = findLeastTimeToReachTarget(map, k);
 
-            long stopTime = System.currentTimeMillis();
-            System.out.println("Test case time:" + (stopTime - startTime));
-
-            if (leastTime >= 1) System.out.println(leastTime - 1);
+            if (leastTime >= 1) System.out.println(leastTime);
             else System.out.println("Impossible");
-
         }
 
-        long stopTime = System.currentTimeMillis();
-        System.out.println("Total time:" + (stopTime - startTime));
+
+//        long stopTime = System.currentTimeMillis();
+//        System.out.println("Total time:" + (stopTime - startTime));
     }
 
     private static FireMap readInput(int m, int n) {
@@ -77,10 +74,7 @@ public class P2 {
 
         map.toFireIndices.forEach(toFireIndex -> bfsAndMinTime(timeMap, toFireIndex, map.m, map.n, k));
 
-        long stopTime = System.currentTimeMillis();
-        System.out.println("Bfs time:" + (stopTime - startTime));
-
-        return findAllAvailablePathFromSourceToTarget(timeMap, map.m, map.n, map.source, map.target);
+        return findAllAvailablePathFromSourceToTarget(timeMap, map.m, map.n, map.source, map.target, k);
     }
 
     private static void bfsAndMinTime(int[][] timeMap, Index toFireIndex, int m, int n, int k) {
@@ -91,10 +85,10 @@ public class P2 {
         queue.add(toFireIndex);
         timeMap[toFireIndex.i][toFireIndex.j] = 0;
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             Index polledIndex = queue.poll();
 
-            if (!usedRooms.contains(polledIndex)){
+            if (!usedRooms.contains(polledIndex)) {
                 List<Index> successorOfIndex = getSuccessorOfFireIndex(polledIndex, m, n);
                 for (Index index : successorOfIndex) {
                     timeMap[index.i][index.j] = Math.min(timeMap[index.i][index.j],
@@ -106,35 +100,35 @@ public class P2 {
         }
     }
 
-    private static List<Index> getSuccessorOfFireIndex(Index index, int m, int n){
+    private static List<Index> getSuccessorOfFireIndex(Index index, int m, int n) {
         List<Index> successors = new ArrayList<>();
 
-        addValidIndex(successors, m,n,index.i - 1, index.j - 1);
-        addValidIndex(successors,m,n, index.i - 1, index.j);
-        addValidIndex(successors,m,n, index.i - 1, index.j + 1);
+        addValidIndex(successors, m, n, index.i - 1, index.j - 1);
+        addValidIndex(successors, m, n, index.i - 1, index.j);
+        addValidIndex(successors, m, n, index.i - 1, index.j + 1);
 
-        addValidIndex(successors, m,n, index.i, index.j - 1);
-        addValidIndex(successors, m,n, index.i, index.j + 1);
+        addValidIndex(successors, m, n, index.i, index.j - 1);
+        addValidIndex(successors, m, n, index.i, index.j + 1);
 
-        addValidIndex(successors, m,n, index.i + 1, index.j - 1);
-        addValidIndex(successors, m,n, index.i + 1, index.j);
-        addValidIndex(successors, m,n, index.i + 1, index.j + 1);
+        addValidIndex(successors, m, n, index.i + 1, index.j - 1);
+        addValidIndex(successors, m, n, index.i + 1, index.j);
+        addValidIndex(successors, m, n, index.i + 1, index.j + 1);
 
         return successors;
     }
 
-    private static List<Index> getSuccessorOfSourceIndex(Index index, int m, int n){
+    private static List<Index> getSuccessorOfSourceIndex(Index index, int m, int n) {
         List<Index> successors = new ArrayList<>();
 
-        addValidIndex(successors,m,n, index.i - 1, index.j);
-        addValidIndex(successors, m,n, index.i, index.j - 1);
-        addValidIndex(successors, m,n, index.i, index.j + 1);
-        addValidIndex(successors, m,n, index.i + 1, index.j);
+        addValidIndex(successors, m, n, index.i - 1, index.j);
+        addValidIndex(successors, m, n, index.i, index.j + 1);
+        addValidIndex(successors, m, n, index.i + 1, index.j);
+        addValidIndex(successors, m, n, index.i, index.j - 1);
 
         return successors;
     }
 
-    private static void addValidIndex(List<Index> successors, int m, int n, int toFireRow, int toFireColumn){
+    private static void addValidIndex(List<Index> successors, int m, int n, int toFireRow, int toFireColumn) {
         if (toFireRow >= 0 &&
                 toFireColumn >= 0 &&
                 m > toFireRow &&
@@ -143,23 +137,29 @@ public class P2 {
         }
     }
 
+    // using A* algorithm
     private static int findAllAvailablePathFromSourceToTarget(int[][] timeMap, int m, int n,
-                                                                        Index source, Index target) {
+                                                              Index source, Index target, int k) {
 
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(
-                Comparator.comparingDouble(o -> o.heuristic + o.currentTime));
+                Comparator.comparingInt(o -> o.heuristic + o.currentTime)
+        );
 
-        priorityQueue.add(new Node(1, source, target));
+        priorityQueue.add(new Node(0, source, target));
 
-        while(!priorityQueue.isEmpty()) {
+        while (!priorityQueue.isEmpty()) {
             Node polledNode = priorityQueue.poll();
 
-            if (polledNode.index.equals(target)){
-                return polledNode.currentTime;
-            } else if (polledNode.currentTime < timeMap[polledNode.index.i][polledNode.index.j]){
+            if (polledNode.currentTime < timeMap[polledNode.index.i][polledNode.index.j]) {
+
+                if (polledNode.index.equals(target)) {
+                    return polledNode.currentTime;
+                }
+
                 getSuccessorOfSourceIndex(polledNode.index, m, n)
                         .forEach(index -> priorityQueue.add(new Node(polledNode.currentTime + 1, index,
                                 target)));
+
             }
         }
         return 0;
