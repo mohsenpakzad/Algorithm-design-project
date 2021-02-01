@@ -15,7 +15,7 @@ public class P1 {
 //        long startTime = System.currentTimeMillis();
 
 
-        scanner = Utils.getFileScanner("TestCases/A/a.in");
+        scanner = Utils.getFileScanner("TestCases/A/a.real.in");
 //        scanner = new Scanner(System.in);
 
         int m, n, k;
