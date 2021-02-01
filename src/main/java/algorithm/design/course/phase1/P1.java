@@ -3,7 +3,10 @@ package algorithm.design.course.phase1;
 import algorithm.design.course.helper.Index;
 import algorithm.design.course.helper.Utils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class P1 {
@@ -15,8 +18,8 @@ public class P1 {
 //        long startTime = System.currentTimeMillis();
 
 
-        scanner = Utils.getFileScanner("TestCases/A/a.real.in");
-//        scanner = new Scanner(System.in);
+        scanner = Utils.getFileScanner("TestCases/A/a.in");
+
 
         int m, n, k;
 

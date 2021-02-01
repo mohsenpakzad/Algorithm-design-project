@@ -5,6 +5,8 @@ import algorithm.design.course.helper.Utils;
 
 import java.util.*;
 
+// THIS PHASE NOT COMPLETE!
+
 public class P3 {
 
     private static Scanner scanner;
@@ -13,7 +15,6 @@ public class P3 {
 
 
         scanner = Utils.getFileScanner("TestCases/C/nested-stronghold.in");
-        //        scanner = new Scanner(System.in);
 
         int m = scanner.nextInt();
         int n = scanner.nextInt();

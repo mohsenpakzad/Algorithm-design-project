@@ -9,6 +9,7 @@ class DfsNode {
     public Cave startCave;
     public Cave desCave;
     public int passedLength = 0;
+
     public DfsNode(DfsNode parent, Cave startCave, Cave desCave, int passedLength) {
 
         if (parent != null) {

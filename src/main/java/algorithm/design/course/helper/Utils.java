@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Utils {
 
-    public static Scanner getFileScanner(String path){
+    public static Scanner getFileScanner(String path) {
         try {
             return new Scanner(new File(path));
         } catch (FileNotFoundException e) {

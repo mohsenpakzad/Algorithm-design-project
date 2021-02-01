@@ -15,7 +15,7 @@ public class P4 {
 
 
         scanner = Utils.getFileScanner("TestCases/D/random.10000.in");
-        //        scanner = new Scanner(System.in);
+
 
         int testsNumber = scanner.nextInt();
         for (int i = 0; i < testsNumber; i++) {
